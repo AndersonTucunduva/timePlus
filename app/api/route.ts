@@ -4,14 +4,29 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-export async function newEmployee(name: string) {
-  const response = await prisma.employee.create({
-    data: {
-      name,
-    },
-  })
-
-  return response
+export async function newEmployee(
+  name: string,
+  role: string | null,
+): Promise<{
+  id: number
+  name: string
+  status: boolean
+  role: string | null
+  createdAt: Date
+  deletedAt: Date | null
+}> {
+  try {
+    const response = await prisma.employee.create({
+      data: {
+        name,
+        role,
+      },
+    })
+    return response
+  } catch (error) {
+    console.error('Erro ao criar funcionário no Prisma:', error)
+    throw error
+  }
 }
 
 export async function getAllEmployees() {

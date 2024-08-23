@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { DrawerMenu } from '@/components/DrawerMenu/DrawerMenu'
+import { Toaster } from '@/components/ui/toaster'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,6 +22,7 @@ export default function RootLayout({
         <header className="fixed left-0 top-0 z-50 flex w-full items-center bg-slate-600 px-4 py-2">
           <DrawerMenu />
         </header>
+        <Toaster />
         <main className="pt-14">{children}</main>
       </body>
     </html>
