@@ -8,6 +8,7 @@ import { newEmployee } from '@/app/api/route'
 export default function InputEmployee() {
   const [isNew, setIsNew] = useState(false)
   const [employeeName, setEmployeeName] = useState('')
+  const [employeeRole, setEmployeeRole] = useState('')
 
   function handlePlusClick() {
     setIsNew(true)
@@ -15,9 +16,11 @@ export default function InputEmployee() {
 
   async function handleNewEmployee() {
     try {
-      await newEmployee(employeeName)
+      const response = await newEmployee(employeeName, employeeRole)
+      console.log('RESPONSE:', response)
       setIsNew(false)
       setEmployeeName('')
+      setEmployeeRole('')
     } catch (error) {
       console.error('Erro ao criar funcionário:', error)
     }
@@ -37,6 +40,14 @@ export default function InputEmployee() {
           placeholder="Novo funcionário"
           value={employeeName}
           onChange={(e) => setEmployeeName(e.target.value)}
+        />
+      </div>
+      <div className="min-w-48">
+        <Input
+          disabled={!isNew}
+          placeholder="Função"
+          value={employeeRole}
+          onChange={(e) => setEmployeeRole(e.target.value)}
         />
       </div>
       {isNew && (
