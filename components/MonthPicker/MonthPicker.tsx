@@ -32,8 +32,13 @@ export default function MonthPicker() {
   const [selectedYear, setSelectedYear] = useState(
     new Date().getFullYear().toString(),
   )
-  const [balances, setBalances] = useState<Record<number, number> | null>(null)
-  console.log('BALANCE:', balances)
+  const [balances, setBalances] = useState<{
+    groupedBalances: Record<
+      string,
+      Array<{ amount: number; createdAt: Date; description: string }>
+    >
+    totals: Record<string, number>
+  } | null>(null)
 
   const handleSearch = async () => {
     if (selectedMonth && selectedYear) {
@@ -46,8 +51,8 @@ export default function MonthPicker() {
   }
 
   return (
-    <div>
-      <div className="flex gap-4">
+    <div className="p-2">
+      <div className="flex justify-center gap-4">
         <Select onValueChange={(value) => setSelectedMonth(value)}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Mês" />
@@ -92,14 +97,52 @@ export default function MonthPicker() {
 
       {balances && (
         <div className="mt-4">
-          <h2 className="text-xl font-bold">Saldos do Mês:</h2>
-          <ul>
-            {Object.entries(balances).map(([employeeId, balance]) => (
-              <li key={employeeId}>
-                Funcionário {employeeId}: {balance} minutos
-              </li>
-            ))}
-          </ul>
+          {Object.entries(balances.groupedBalances).map(
+            ([employeeName, adjustments], index) => (
+              <div key={index} className="mb-6">
+                <h2 className="mb-2 text-xl font-bold">{employeeName}</h2>
+                <div className="grid grid-cols-5 gap-1 sm:gap-4">
+                  <div className="font-semibold">Hora Extra</div>
+                  <div className="font-semibold">Hora devedora </div>
+                  <div className="font-semibold">Data de Criação</div>
+                  <div className="font-semibold">Descrição</div>
+                  <div className="font-semibold">Total</div>
+                </div>
+                {adjustments.map((adjustment, i) => (
+                  <div key={i} className="grid grid-cols-5 gap-1 sm:gap-4">
+                    <div className="max-w-14 border-b">
+                      {adjustment.amount > 0 ? adjustment.amount : ''}
+                    </div>
+                    <div className="max-w-14 border-b">
+                      {adjustment.amount < 0 ? adjustment.amount : ''}
+                    </div>
+                    <div className="max-w-40 border-b">
+                      {new Date(adjustment.createdAt).toLocaleDateString()}
+                    </div>
+                    <div className="max-w-52 flex-wrap border-b">
+                      {adjustment.description}
+                    </div>
+                    <div></div>{' '}
+                  </div>
+                ))}
+                <div className="mt-2 grid grid-cols-5 gap-4 font-bold">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div className="border-b">Total:</div>
+                  <div
+                    className={`max-w-32 border-b px-4 py-2 ${
+                      balances.totals[employeeName] >= 0
+                        ? 'bg-blue-300'
+                        : 'bg-red-300'
+                    }`}
+                  >
+                    {balances.totals[employeeName]} Minutos
+                  </div>
+                </div>
+              </div>
+            ),
+          )}
         </div>
       )}
     </div>
