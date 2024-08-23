@@ -27,7 +27,7 @@ export function DrawerMenu() {
         </SheetHeader>
         <nav className="mt-8 flex flex-col space-y-4">
           <SheetClose asChild>
-            <Link href="/reports" className="mt-4 text-white">
+            <Link href="/" className="mt-4 text-white">
               Lançamentos
             </Link>
           </SheetClose>

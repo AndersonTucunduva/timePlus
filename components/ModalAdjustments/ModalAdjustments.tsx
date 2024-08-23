@@ -62,7 +62,7 @@ export default function ModalAdjustments({ employeeId }: Props) {
         </button>
       </div>
       <div className="mt-4 flex max-w-48 items-center">
-        <div className="h-7 w-7">
+        <div className="mr-2 h-7 w-7">
           {isAdding ? <Plus className="mr-2" /> : <Minus className="mr-2" />}
         </div>
         <Input
