@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="pt">
       <body className={inter.className}>
-        <header className="fixed left-0 top-0 z-50 flex w-full items-center bg-slate-600 px-4 py-2">
+        <header className="fixed left-0 top-0 z-50 flex w-full items-center bg-slate-800 px-4 py-2">
           <DrawerMenu />
         </header>
         <Toaster />
