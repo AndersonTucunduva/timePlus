@@ -1,6 +1,23 @@
+'use server'
+
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
+
+export async function newEmployee(name: string) {
+  const response = await prisma.employee.create({
+    data: {
+      name,
+    },
+  })
+
+  return response
+}
+
+export async function getAllEmployees() {
+  const result = await prisma.employee.findMany()
+  return result
+}
 
 export async function addAdjustment(
   employeeId: number,
@@ -17,14 +34,9 @@ export async function addAdjustment(
   return adjustment
 }
 
-export async function getMonthlyBalance(
-  employeeId: number,
-  year: number,
-  month: number,
-) {
+export async function getMonthlyBalances(year: number, month: number) {
   const adjustments = await prisma.adjustment.findMany({
     where: {
-      employeeId,
       date: {
         gte: new Date(year, month - 1, 1),
         lt: new Date(year, month, 1),
@@ -32,9 +44,17 @@ export async function getMonthlyBalance(
     },
   })
 
-  const balance = adjustments.reduce(
-    (total, adjustment) => total + adjustment.amount,
-    0,
+  const balances = adjustments.reduce(
+    (acc, adjustment) => {
+      const { employeeId, amount } = adjustment
+      if (!acc[employeeId]) {
+        acc[employeeId] = 0
+      }
+      acc[employeeId] += amount
+      return acc
+    },
+    {} as Record<number, number>,
   )
-  return balance
+
+  return balances
 }
