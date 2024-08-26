@@ -15,9 +15,9 @@ export default function InputEmployee() {
   }
 
   async function handleNewEmployee() {
+    if (employeeName === '') return
     try {
-      const response = await newEmployee(employeeName, employeeRole)
-      console.log('RESPONSE:', response)
+      await newEmployee(employeeName, employeeRole)
       setIsNew(false)
       setEmployeeName('')
       setEmployeeRole('')

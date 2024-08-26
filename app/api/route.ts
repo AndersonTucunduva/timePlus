@@ -1,6 +1,7 @@
 'use server'
 
 import { PrismaClient } from '@prisma/client'
+import { revalidatePath } from 'next/cache'
 
 const prisma = new PrismaClient()
 
@@ -22,6 +23,7 @@ export async function newEmployee(
         role,
       },
     })
+    revalidatePath('/')
     return response
   } catch (error) {
     console.error('Erro ao criar funcionário no Prisma:', error)
@@ -49,32 +51,6 @@ export async function addAdjustment(
   return adjustment
 }
 
-/*
-export async function getMonthlyBalances(year: number, month: number) {
-  const adjustments = await prisma.adjustment.findMany({
-    where: {
-      date: {
-        gte: new Date(year, month - 1, 1),
-        lt: new Date(year, month, 1),
-      },
-    },
-  })
-
-  const balances = adjustments.reduce(
-    (acc, adjustment) => {
-      const { employeeId, amount } = adjustment
-      if (!acc[employeeId]) {
-        acc[employeeId] = 0
-      }
-      acc[employeeId] += amount
-      return acc
-    },
-    {} as Record<number, number>,
-  )
-
-  return balances
-}
-*/
 export async function getMonthlyBalances(year: number, month: number) {
   const adjustments = await prisma.adjustment.findMany({
     where: {
@@ -84,11 +60,10 @@ export async function getMonthlyBalances(year: number, month: number) {
       },
     },
     include: {
-      employee: true, // Inclui os dados do funcionário
+      employee: true,
     },
   })
 
-  // Agrupa os ajustes por funcionário
   const groupedBalances = adjustments.reduce(
     (acc, adjustment) => {
       const { employee, amount, date, description } = adjustment
@@ -100,7 +75,7 @@ export async function getMonthlyBalances(year: number, month: number) {
       acc[employee.name].push({
         amount,
         createdAt: date,
-        description: description || '', // Garante que a descrição seja uma string
+        description: description || '',
       })
 
       return acc
@@ -111,7 +86,6 @@ export async function getMonthlyBalances(year: number, month: number) {
     >,
   )
 
-  // Calcula o total para cada funcionário
   const totals = Object.keys(groupedBalances).reduce(
     (acc, employeeName) => {
       const total = groupedBalances[employeeName].reduce(
