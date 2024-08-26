@@ -1,4 +1,4 @@
-import { getAllEmployees } from '@/app/api/route'
+import { getAllEmployees } from '@/app/actions/route'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import ModalAdjustments from '../ModalAdjustments/ModalAdjustments'
 
@@ -6,7 +6,7 @@ export default async function Employee() {
   const employees = await getAllEmployees()
 
   return (
-    <div className="grid grid-cols-1 gap-4 border-2 p-2 shadow-lg sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+    <div className="grid grid-cols-1 gap-4 rounded-md border-2 p-2 shadow-lg sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {employees.map((employee) => (
         <Popover key={employee.id}>
           <PopoverTrigger asChild>

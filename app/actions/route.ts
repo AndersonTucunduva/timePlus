@@ -1,9 +1,39 @@
 'use server'
 
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 
-const prisma = new PrismaClient()
+export async function authenticate(password: string) {
+  const user = await prisma.user.findFirst({
+    where: { password },
+  })
+
+  if (user) {
+    return true
+  }
+
+  return false
+}
+
+export async function resetPassword(
+  masterPassword: string,
+  newPassword: string,
+) {
+  const masterUser = await prisma.user.findFirst({
+    where: { isMaster: true, password: masterPassword },
+  })
+
+  if (masterUser) {
+    await prisma.user.updateMany({
+      where: { isMaster: false },
+      data: { password: newPassword },
+    })
+
+    return true
+  }
+
+  return false
+}
 
 export async function newEmployee(
   name: string,
@@ -49,6 +79,50 @@ export async function addAdjustment(
     },
   })
   return adjustment
+}
+
+export async function getAllBalances() {
+  const adjustments = await prisma.adjustment.findMany({
+    include: {
+      employee: true,
+    },
+  })
+
+  const groupedBalances = adjustments.reduce(
+    (acc, adjustment) => {
+      const { employee, amount, date, description } = adjustment
+
+      if (!acc[employee.name]) {
+        acc[employee.name] = []
+      }
+
+      acc[employee.name].push({
+        amount,
+        createdAt: date,
+        description: description || '',
+      })
+
+      return acc
+    },
+    {} as Record<
+      string,
+      Array<{ amount: number; createdAt: Date; description: string }>
+    >,
+  )
+
+  const totals = Object.keys(groupedBalances).reduce(
+    (acc, employeeName) => {
+      const total = groupedBalances[employeeName].reduce(
+        (sum, adjustment) => sum + adjustment.amount,
+        0,
+      )
+      acc[employeeName] = total
+      return acc
+    },
+    {} as Record<string, number>,
+  )
+
+  return { groupedBalances, totals }
 }
 
 export async function getMonthlyBalances(year: number, month: number) {
@@ -99,4 +173,18 @@ export async function getMonthlyBalances(year: number, month: number) {
   )
 
   return { groupedBalances, totals }
+}
+
+export async function getEmployeeTotalBalance(employeeId: number) {
+  const adjustments = await prisma.adjustment.findMany({
+    where: {
+      employeeId,
+    },
+  })
+
+  const totalBalance = adjustments.reduce((sum, adjustment) => {
+    return sum + adjustment.amount
+  }, 0)
+
+  return totalBalance
 }

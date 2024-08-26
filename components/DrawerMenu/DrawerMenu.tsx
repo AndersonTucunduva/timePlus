@@ -31,6 +31,11 @@ export function DrawerMenu() {
               Lançamentos
             </Link>
           </SheetClose>
+          <SheetClose asChild>
+            <Link href="/reports" className="mt-4 text-white">
+              Relatório
+            </Link>
+          </SheetClose>
         </nav>
       </SheetContent>
     </Sheet>

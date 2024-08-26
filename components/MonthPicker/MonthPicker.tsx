@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Select,
   SelectTrigger,
@@ -10,7 +10,7 @@ import {
   SelectGroup,
   SelectLabel,
 } from '@/components/ui/select'
-import { getMonthlyBalances } from '@/app/api/route'
+import { getAllBalances, getMonthlyBalances } from '@/app/actions/route'
 
 const months = [
   { value: '01', label: 'Janeiro' },
@@ -40,6 +40,15 @@ export default function MonthPicker() {
     totals: Record<string, number>
   } | null>(null)
 
+  const loadAllBalances = async () => {
+    const results = await getAllBalances()
+    setBalances(results)
+  }
+
+  useEffect(() => {
+    loadAllBalances()
+  }, [])
+
   const handleSearch = async () => {
     if (selectedMonth && selectedYear) {
       const results = await getMonthlyBalances(
@@ -47,6 +56,8 @@ export default function MonthPicker() {
         parseInt(selectedMonth),
       )
       setBalances(results)
+    } else {
+      loadAllBalances()
     }
   }
 
@@ -101,42 +112,53 @@ export default function MonthPicker() {
             ([employeeName, adjustments], index) => (
               <div key={index} className="mb-6">
                 <h2 className="mb-2 text-xl font-bold">{employeeName}</h2>
-                <div className="grid grid-cols-5 gap-1 sm:gap-4">
-                  <div className="font-semibold">Hora Extra</div>
-                  <div className="font-semibold">Hora devedora </div>
-                  <div className="font-semibold">Data de Criação</div>
-                  <div className="font-semibold">Descrição</div>
-                  <div className="font-semibold">Total</div>
+                <div className="grid grid-cols-4 gap-1 sm:gap-4">
+                  <div className="flex justify-center font-semibold">
+                    Hora Extra
+                  </div>
+                  <div className="flex justify-center font-semibold">
+                    Hora devedora{' '}
+                  </div>
+                  <div className="flex justify-center font-semibold">
+                    Data do lançamento
+                  </div>
+                  <div className="flex justify-center font-semibold">
+                    Motivo
+                  </div>
                 </div>
                 {adjustments.map((adjustment, i) => (
-                  <div key={i} className="grid grid-cols-5 gap-1 sm:gap-4">
-                    <div className="max-w-14 border-b">
+                  <div
+                    key={i}
+                    className={`grid grid-cols-4 ${
+                      i % 2 === 0 ? 'bg-gray-100' : 'border bg-white'
+                    }`}
+                  >
+                    <div className="flex justify-center text-lg font-medium text-blue-700">
                       {adjustment.amount > 0 ? adjustment.amount : ''}
                     </div>
-                    <div className="max-w-14 border-b">
+                    <div className="flex justify-center text-lg font-medium text-red-700">
                       {adjustment.amount < 0 ? adjustment.amount : ''}
                     </div>
-                    <div className="max-w-40 border-b">
+                    <div className="flex justify-center text-xs sm:text-base">
                       {new Date(adjustment.createdAt).toLocaleDateString()}
                     </div>
-                    <div className="max-w-52 flex-wrap border-b">
-                      {adjustment.description}
-                    </div>
-                    <div></div>{' '}
+                    <div className="flex-wrap">{adjustment.description}</div>
+                    <div></div>
                   </div>
                 ))}
-                <div className="mt-2 grid grid-cols-5 gap-4 font-bold">
+                <div className="mt-2 grid grid-cols-5 font-bold">
                   <div></div>
                   <div></div>
                   <div></div>
-                  <div className="border-b">Total:</div>
+                  <div></div>
                   <div
-                    className={`max-w-32 border-b px-4 py-2 ${
+                    className={`flex flex-col items-center justify-center gap-3 px-1 py-1 font-bold sm:flex-row ${
                       balances.totals[employeeName] >= 0
                         ? 'bg-blue-300'
                         : 'bg-red-300'
                     }`}
                   >
+                    <p className="flex text-xl font-semibold">Total:</p>
                     {balances.totals[employeeName]} Minutos
                   </div>
                 </div>
