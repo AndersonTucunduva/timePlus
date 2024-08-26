@@ -25,3 +25,9 @@ model Adjustment {
   amount      Int
   description String?
 }
+
+model User {
+  id       Int     @id @default(autoincrement())
+  password String
+  isMaster Boolean @default(false)
+}

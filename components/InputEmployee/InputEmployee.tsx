@@ -3,7 +3,7 @@
 import { Check, Plus, X } from 'lucide-react'
 import { Input } from '../ui/input'
 import { useState } from 'react'
-import { newEmployee } from '@/app/api/route'
+import { newEmployee } from '@/app/actions/route'
 
 export default function InputEmployee() {
   const [isNew, setIsNew] = useState(false)
