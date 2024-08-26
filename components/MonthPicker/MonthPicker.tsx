@@ -10,7 +10,7 @@ import {
   SelectGroup,
   SelectLabel,
 } from '@/components/ui/select'
-import { getAllBalances, getMonthlyBalances } from '@/app/actions/route'
+import { getAllBalances, getMonthlyBalances } from '@/app/api/actions'
 
 const months = [
   { value: '01', label: 'Janeiro' },

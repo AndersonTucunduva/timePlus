@@ -3,7 +3,7 @@
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 
-export async function authenticate(password: string) {
+export async function authTransaction(password: string) {
   const user = await prisma.user.findFirst({
     where: { password },
   })
