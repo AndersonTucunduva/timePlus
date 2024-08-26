@@ -3,7 +3,7 @@
 import { Minus, Plus } from 'lucide-react'
 import { Input } from '../ui/input'
 import { useEffect, useState } from 'react'
-import { addAdjustment, getEmployeeTotalBalance } from '@/app/actions/route'
+import { addAdjustment, getEmployeeTotalBalance } from '@/app/api/actions'
 import { useToast } from '@/components/ui/use-toast'
 import { ModalConfirm } from '../ModalConfirm/ModalConfirm'
 

@@ -1,4 +1,4 @@
-import { getAllEmployees } from '@/app/actions/route'
+import { getAllEmployees } from '@/app/api/actions'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import ModalAdjustments from '../ModalAdjustments/ModalAdjustments'
 

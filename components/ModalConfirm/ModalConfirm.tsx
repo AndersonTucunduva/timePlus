@@ -1,4 +1,4 @@
-import { authenticate } from '@/app/actions/route'
+import { authTransaction } from '@/app/api/actions'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -23,7 +23,7 @@ export function ModalConfirm({ handleSaveAdjustments }: Props) {
   const [open, setOpen] = useState(false)
 
   async function handleTransaction() {
-    const success = await authenticate(password)
+    const success = await authTransaction(password)
 
     if (success) {
       handleSaveAdjustments()
