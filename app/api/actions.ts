@@ -3,6 +3,15 @@
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 
+export interface Employee {
+  id: number
+  name: string
+  status: boolean
+  role?: string | null
+  createdAt: Date
+  deletedAt: Date | null
+}
+
 export async function authTransaction(password: string) {
   const user = await prisma.user.findFirst({
     where: { password },
@@ -62,8 +71,24 @@ export async function newEmployee(
 }
 
 export async function getAllEmployees() {
-  const result = await prisma.employee.findMany()
+  const result = await prisma.employee.findMany({
+    where: {
+      deletedAt: null,
+    },
+  })
   return result
+}
+
+export async function deleteEmployee(employeeId: number) {
+  await prisma.employee.update({
+    where: {
+      id: employeeId,
+    },
+    data: {
+      deletedAt: new Date(),
+    },
+  })
+  revalidatePath('/')
 }
 
 export async function addAdjustment(

@@ -3,16 +3,21 @@
 import { Minus, Plus } from 'lucide-react'
 import { Input } from '../ui/input'
 import { useEffect, useState } from 'react'
-import { addAdjustment, getEmployeeTotalBalance } from '@/app/api/actions'
+import {
+  addAdjustment,
+  deleteEmployee,
+  getEmployeeTotalBalance,
+} from '@/app/api/actions'
 import { useToast } from '@/components/ui/use-toast'
 import { ModalConfirm } from '../ModalConfirm/ModalConfirm'
+import { ModalDelete } from '../ModalDelete/ModalDelete'
 
 interface Props {
   employeeId: number
 }
 
 export default function ModalAdjustments({ employeeId }: Props) {
-  const [value, setValue] = useState(1)
+  const [value, setValue] = useState(0.1)
   const [description, setDescription] = useState('')
   const [isAdding, setIsAdding] = useState<boolean>(true)
   const [totalBalance, setTotalBalance] = useState<number | null>(null)
@@ -30,11 +35,21 @@ export default function ModalAdjustments({ employeeId }: Props) {
 
     fetchTotalBalance()
   }, [employeeId])
+  /*
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setValue(event.target.value)
+  }
+*/
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const newValue = Number(event.target.value)
-    if (newValue >= 1) {
+    const newValue = parseFloat(event.target.value)
+
+    // Verifica se o novo valor é um número válido
+    if (!isNaN(newValue)) {
       setValue(newValue)
+    } else {
+      // Lida com o caso em que o valor não é um número válido
+      console.error('Valor inválido:', event.target.value)
     }
   }
 
@@ -42,19 +57,74 @@ export default function ModalAdjustments({ employeeId }: Props) {
     setDescription(event.target.value)
   }
 
+  function convertTimeInputToMinutes(timeInput: number) {
+    // Converta o número para uma string com duas casas decimais
+    const timeString = timeInput.toFixed(2) // Exemplo: 0.50
+
+    // Separe a string em horas e minutos com base no ponto decimal
+    const [hours, minutes] = timeString.split('.').map(Number)
+
+    // Converta horas e minutos para minutos totais
+    return hours * 60 + (minutes || 0)
+  }
+
+  /*
+  function convertTimeInputToMinutes(timeInput: string) {
+    const [hours, minutes] = timeInput.split(',').map(Number)
+
+    // Verifica se hours e minutes são números válidos
+    if (isNaN(hours) || isNaN(minutes)) {
+      alert('Permitido apenas números separados por virgula')
+    }
+
+    return hours * 60 + minutes * 10 // Multiplica minutos por 10 para ajustar o formato
+  }
+
+  */
+  /*
+  function convertMinutesToTimeFormat(totalMinutes: number) {
+    const hours = Math.floor(totalMinutes / 60)
+    const minutes = Math.round((totalMinutes % 60) / 10) // Ajusta minutos para o formato h,m
+    return `${hours},${minutes}`
+  }
+*/
+
+  function convertMinutesToTimeFormat(minutes: number) {
+    const hours = Math.floor(minutes / 60)
+    const remainingMinutes = minutes % 60
+    return `${hours}h ${remainingMinutes}min`
+  }
+
   async function handleSaveAdjustments() {
     try {
-      const finalValue = isAdding ? value : -value
+      const adjustedMinutes = convertTimeInputToMinutes(value) // Converte para minutos
+      const finalValue = isAdding ? adjustedMinutes : -adjustedMinutes
+
       await addAdjustment(employeeId, finalValue, description)
-      setValue(1)
+      setValue(0.1)
       setDescription('')
       toast({
         variant: 'default',
-        description: 'Hora adicionado com sucesso!',
+        description: 'Hora adicionada com sucesso!',
         duration: 1000,
       })
+
       const updatedBalance = await getEmployeeTotalBalance(employeeId)
       setTotalBalance(updatedBalance)
+    } catch (error) {
+      console.error('Erro ao salvar ajuste:', error)
+    }
+  }
+
+  async function handleDelete() {
+    try {
+      await deleteEmployee(employeeId)
+
+      toast({
+        variant: 'destructive',
+        description: 'Funcionário excluído com sucesso!',
+        duration: 1000,
+      })
     } catch (error) {
       console.error('Erro ao salvar ajuste:', error)
     }
@@ -75,7 +145,9 @@ export default function ModalAdjustments({ employeeId }: Props) {
               : ''
           }`}
         >
-          {totalBalance !== null ? `${totalBalance} minutos` : 'Carregando...'}
+          {totalBalance !== null
+            ? `${convertMinutesToTimeFormat(totalBalance)}`
+            : 'Carregando...'}
         </p>
       </div>
       <div className="mb-2 flex justify-center">
@@ -103,9 +175,9 @@ export default function ModalAdjustments({ employeeId }: Props) {
           type="number"
           value={value}
           onChange={handleChange}
-          placeholder="Quantidade"
+          placeholder="Quantidade (h,m)"
         />
-        <p className="ml-4">Minutos</p>
+        <p className="ml-4">Horas</p>
       </div>
       <div className="mt-4">
         <Input
@@ -115,6 +187,7 @@ export default function ModalAdjustments({ employeeId }: Props) {
         />
       </div>
       <ModalConfirm handleSaveAdjustments={handleSaveAdjustments} />
+      <ModalDelete handleDelete={handleDelete} />
     </div>
   )
 }

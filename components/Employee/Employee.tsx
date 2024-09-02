@@ -1,10 +1,8 @@
-import { getAllEmployees } from '@/app/api/actions'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import ModalAdjustments from '../ModalAdjustments/ModalAdjustments'
+import { Employee as EmployeeType } from '@/app/api/actions'
 
-export default async function Employee() {
-  const employees = await getAllEmployees()
-
+function Employee({ employees }: { employees: EmployeeType[] }) {
   return (
     <div className="grid grid-cols-1 gap-4 rounded-md border-2 p-2 shadow-lg sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {employees.map((employee) => (
@@ -25,3 +23,5 @@ export default async function Employee() {
     </div>
   )
 }
+
+export default Employee
