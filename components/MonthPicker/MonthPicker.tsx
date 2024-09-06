@@ -61,6 +61,13 @@ export default function MonthPicker() {
     }
   }
 
+  // Função para converter minutos em horas e minutos
+  function convertMinutesToHoursAndMinutes(minutes: number) {
+    const hours = Math.floor(minutes / 60)
+    const remainingMinutes = minutes % 60
+    return `${hours}h ${remainingMinutes}min`
+  }
+
   return (
     <div className="p-2">
       <div className="flex justify-center gap-4">
@@ -126,26 +133,44 @@ export default function MonthPicker() {
                     Motivo
                   </div>
                 </div>
-                {adjustments.map((adjustment, i) => (
-                  <div
-                    key={i}
-                    className={`grid grid-cols-4 ${
-                      i % 2 === 0 ? 'bg-gray-100' : 'border bg-white'
-                    }`}
-                  >
-                    <div className="flex justify-center text-lg font-medium text-blue-700">
-                      {adjustment.amount > 0 ? adjustment.amount : ''}
+                {adjustments.map((adjustment, i) => {
+                  const amountInHours = Math.floor(adjustment.amount / 60)
+                  const remainingMinutes = adjustment.amount % 60
+
+                  return (
+                    <div
+                      key={i}
+                      className={`grid grid-cols-4 ${
+                        i % 2 === 0 ? 'bg-gray-100' : 'border bg-white'
+                      }`}
+                    >
+                      <div className="flex flex-col items-center justify-center gap-2 text-lg font-medium text-blue-700 sm:flex-row">
+                        {adjustment.amount > 0 && (
+                          <>
+                            {adjustment.amount} Min.
+                            <span>
+                              ({amountInHours}h {remainingMinutes}min)
+                            </span>
+                          </>
+                        )}
+                      </div>
+                      <div className="flex flex-col items-center justify-center gap-2 text-lg font-medium text-red-700 sm:flex-row">
+                        {adjustment.amount < 0 && (
+                          <>
+                            {adjustment.amount} Min.
+                            <span>
+                              ({amountInHours}h {remainingMinutes}min)
+                            </span>
+                          </>
+                        )}
+                      </div>
+                      <div className="flex justify-center text-xs sm:text-base">
+                        {new Date(adjustment.createdAt).toLocaleDateString()}
+                      </div>
+                      <div className="flex-wrap">{adjustment.description}</div>
                     </div>
-                    <div className="flex justify-center text-lg font-medium text-red-700">
-                      {adjustment.amount < 0 ? adjustment.amount : ''}
-                    </div>
-                    <div className="flex justify-center text-xs sm:text-base">
-                      {new Date(adjustment.createdAt).toLocaleDateString()}
-                    </div>
-                    <div className="flex-wrap">{adjustment.description}</div>
-                    <div></div>
-                  </div>
-                ))}
+                  )
+                })}
                 <div className="mt-2 grid grid-cols-5 font-bold">
                   <div></div>
                   <div></div>
@@ -159,7 +184,14 @@ export default function MonthPicker() {
                     }`}
                   >
                     <p className="flex text-xl font-semibold">Total:</p>
-                    {balances.totals[employeeName]} Minutos
+                    <p>{balances.totals[employeeName]} Min.</p>
+                    <p>
+                      (
+                      {convertMinutesToHoursAndMinutes(
+                        balances.totals[employeeName],
+                      )}
+                      )
+                    </p>
                   </div>
                 </div>
               </div>
