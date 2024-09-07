@@ -18,10 +18,10 @@ export async function authTransaction(password: string) {
   })
 
   if (user) {
-    return true
+    return user
   }
 
-  return false
+  return null
 }
 
 export async function resetPassword(
@@ -95,12 +95,14 @@ export async function addAdjustment(
   employeeId: number,
   amount: number,
   description?: string,
+  userId?: number,
 ) {
   const adjustment = await prisma.adjustment.create({
     data: {
       employeeId,
       amount,
       description,
+      userId,
     },
   })
   return adjustment
@@ -110,12 +112,13 @@ export async function getAllBalances() {
   const adjustments = await prisma.adjustment.findMany({
     include: {
       employee: true,
+      user: true,
     },
   })
 
   const groupedBalances = adjustments.reduce(
     (acc, adjustment) => {
-      const { employee, amount, date, description } = adjustment
+      const { employee, amount, date, description, user } = adjustment
 
       if (!acc[employee.name]) {
         acc[employee.name] = []
@@ -125,13 +128,19 @@ export async function getAllBalances() {
         amount,
         createdAt: date,
         description: description || '',
+        user: user.name || 'Usuário desconhecido',
       })
 
       return acc
     },
     {} as Record<
       string,
-      Array<{ amount: number; createdAt: Date; description: string }>
+      Array<{
+        amount: number
+        createdAt: Date
+        description: string
+        user: string
+      }>
     >,
   )
 
@@ -160,12 +169,13 @@ export async function getMonthlyBalances(year: number, month: number) {
     },
     include: {
       employee: true,
+      user: true,
     },
   })
 
   const groupedBalances = adjustments.reduce(
     (acc, adjustment) => {
-      const { employee, amount, date, description } = adjustment
+      const { employee, amount, date, description, user } = adjustment
 
       if (!acc[employee.name]) {
         acc[employee.name] = []
@@ -175,13 +185,19 @@ export async function getMonthlyBalances(year: number, month: number) {
         amount,
         createdAt: date,
         description: description || '',
+        user: user.name || 'Usuário desconhecido',
       })
 
       return acc
     },
     {} as Record<
       string,
-      Array<{ amount: number; createdAt: Date; description: string }>
+      Array<{
+        amount: number
+        createdAt: Date
+        description: string
+        user: string
+      }>
     >,
   )
 

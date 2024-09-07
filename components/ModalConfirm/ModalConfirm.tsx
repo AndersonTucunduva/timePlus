@@ -15,7 +15,7 @@ import { Check } from 'lucide-react'
 import { useState } from 'react'
 
 interface Props {
-  handleSaveAdjustments: () => void
+  handleSaveAdjustments: (userId: number) => void
 }
 
 export function ModalConfirm({ handleSaveAdjustments }: Props) {
@@ -25,8 +25,9 @@ export function ModalConfirm({ handleSaveAdjustments }: Props) {
   async function handleTransaction() {
     const success = await authTransaction(password)
 
-    if (success) {
-      handleSaveAdjustments()
+    if (success && success.id) {
+      // Verifica se o 'success' tem um 'id'
+      handleSaveAdjustments(success.id)
       setOpen(false)
     } else {
       alert('Senha incorreta')

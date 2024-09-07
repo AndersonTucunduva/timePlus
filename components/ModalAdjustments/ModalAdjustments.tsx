@@ -17,7 +17,7 @@ interface Props {
 }
 
 export default function ModalAdjustments({ employeeId }: Props) {
-  const [value, setValue] = useState(0.1)
+  const [value, setValue] = useState('')
   const [description, setDescription] = useState('')
   const [isAdding, setIsAdding] = useState<boolean>(true)
   const [totalBalance, setTotalBalance] = useState<number | null>(null)
@@ -35,21 +35,39 @@ export default function ModalAdjustments({ employeeId }: Props) {
 
     fetchTotalBalance()
   }, [employeeId])
-  /*
-  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setValue(event.target.value)
+
+  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    let inputValue = event.target.value.replace(/\D/g, '') // Remove tudo que não é número
+
+    // Limita a quantidade máxima de caracteres para evitar entradas inválidas
+    if (inputValue.length > 4) {
+      inputValue = inputValue.slice(0, 4)
+    }
+
+    // Formata o valor para o formato de horas (HH:MM)
+    if (inputValue.length >= 3) {
+      inputValue = `${inputValue.slice(0, -2)}:${inputValue.slice(-2)}`
+    }
+
+    setValue(inputValue)
   }
-*/
 
-  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const newValue = parseFloat(event.target.value)
+  // Função para converter o valor em minutos
+  function convertTimeToMinutes(time: string) {
+    const [hours, minutes] = time.split(':').map(Number)
 
-    // Verifica se o novo valor é um número válido
-    if (!isNaN(newValue)) {
-      setValue(newValue)
+    if (!isNaN(hours) && !isNaN(minutes)) {
+      return hours * 60 + minutes
+    }
+    return null // Retorna nulo se a entrada for inválida
+  }
+
+  function handleBlur() {
+    const totalMinutes = convertTimeToMinutes(value)
+    if (totalMinutes !== null) {
+      console.log('Total em minutos:', totalMinutes)
     } else {
-      // Lida com o caso em que o valor não é um número válido
-      console.error('Valor inválido:', event.target.value)
+      console.error('Formato inválido')
     }
   }
 
@@ -57,52 +75,27 @@ export default function ModalAdjustments({ employeeId }: Props) {
     setDescription(event.target.value)
   }
 
-  function convertTimeInputToMinutes(timeInput: number) {
-    // Converta o número para uma string com duas casas decimais
-    const timeString = timeInput.toFixed(2) // Exemplo: 0.50
-
-    // Separe a string em horas e minutos com base no ponto decimal
-    const [hours, minutes] = timeString.split('.').map(Number)
-
-    // Converta horas e minutos para minutos totais
-    return hours * 60 + (minutes || 0)
-  }
-
-  /*
-  function convertTimeInputToMinutes(timeInput: string) {
-    const [hours, minutes] = timeInput.split(',').map(Number)
-
-    // Verifica se hours e minutes são números válidos
-    if (isNaN(hours) || isNaN(minutes)) {
-      alert('Permitido apenas números separados por virgula')
-    }
-
-    return hours * 60 + minutes * 10 // Multiplica minutos por 10 para ajustar o formato
-  }
-
-  */
-  /*
-  function convertMinutesToTimeFormat(totalMinutes: number) {
-    const hours = Math.floor(totalMinutes / 60)
-    const minutes = Math.round((totalMinutes % 60) / 10) // Ajusta minutos para o formato h,m
-    return `${hours},${minutes}`
-  }
-*/
-
   function convertMinutesToTimeFormat(minutes: number) {
     const hours = Math.floor(minutes / 60)
     const remainingMinutes = minutes % 60
     return `${hours}h ${remainingMinutes}min`
   }
 
-  async function handleSaveAdjustments() {
+  async function handleSaveAdjustments(userId: number) {
     try {
-      const adjustedMinutes = convertTimeInputToMinutes(value) // Converte para minutos
+      const adjustedMinutes = convertTimeToMinutes(value)
+
+      if (adjustedMinutes === null) {
+        throw new Error('Formato de tempo inválido. Use HH:MM.')
+      }
+
       const finalValue = isAdding ? adjustedMinutes : -adjustedMinutes
 
-      await addAdjustment(employeeId, finalValue, description)
-      setValue(0.1)
+      await addAdjustment(employeeId, finalValue, description, userId)
+
+      setValue('')
       setDescription('')
+
       toast({
         variant: 'default',
         description: 'Hora adicionada com sucesso!',
@@ -113,6 +106,10 @@ export default function ModalAdjustments({ employeeId }: Props) {
       setTotalBalance(updatedBalance)
     } catch (error) {
       console.error('Erro ao salvar ajuste:', error)
+      toast({
+        variant: 'destructive',
+        description: 'Erro ao salvar o ajuste de horas.',
+      })
     }
   }
 
@@ -171,12 +168,14 @@ export default function ModalAdjustments({ employeeId }: Props) {
           {isAdding ? <Plus className="mr-2" /> : <Minus className="mr-2" />}
         </div>
         <Input
-          autoFocus
-          type="number"
+          type="text"
           value={value}
-          onChange={handleChange}
-          placeholder="Quantidade (h,m)"
+          onChange={handleInputChange}
+          onBlur={handleBlur}
+          placeholder="HH:MM"
+          maxLength={5}
         />
+
         <p className="ml-4">Horas</p>
       </div>
       <div className="mt-4">
