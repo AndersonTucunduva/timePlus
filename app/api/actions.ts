@@ -1,6 +1,7 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
+import { Adjustment } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 
 export interface Employee {
@@ -12,7 +13,7 @@ export interface Employee {
   deletedAt: Date | null
 }
 
-interface Adjustment {
+interface Adjustments {
   amount: number
   date: Date
   description: string | null
@@ -129,7 +130,7 @@ export async function addAdjustment(
 }
 
 export async function getAllBalances() {
-  const adjustments: Adjustment[] = await prisma.adjustment.findMany({
+  const adjustments: Adjustments[] = await prisma.adjustment.findMany({
     include: {
       employee: true,
       user: true,
@@ -179,7 +180,7 @@ export async function getAllBalances() {
 }
 
 export async function getMonthlyBalances(year: number, month: number) {
-  const adjustments: Adjustment[] = await prisma.adjustment.findMany({
+  const adjustments: Adjustments[] = await prisma.adjustment.findMany({
     where: {
       date: {
         gte: new Date(year, month - 1, 1),
@@ -253,9 +254,12 @@ export async function getEmployeeTotalBalance(employeeId: number) {
     },
   })
 
-  const totalBalance = adjustments.reduce((sum: number, adjustment) => {
-    return sum + adjustment.amount
-  }, 0)
+  const totalBalance = adjustments.reduce(
+    (sum: number, adjustment: Adjustment) => {
+      return sum + adjustment.amount
+    },
+    0,
+  )
 
   return totalBalance
 }
