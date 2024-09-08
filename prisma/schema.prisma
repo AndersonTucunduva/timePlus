@@ -24,10 +24,15 @@ model Adjustment {
   date        DateTime @default(now())
   amount      Int
   description String?
+
+  userId Int  @default(1)
+  user   User @relation(fields: [userId], references: [id])
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  password String
-  isMaster Boolean @default(false)
+  id          Int          @id @default(autoincrement())
+  name        String?
+  password    String
+  isMaster    Boolean      @default(false)
+  adjustments Adjustment[]
 }

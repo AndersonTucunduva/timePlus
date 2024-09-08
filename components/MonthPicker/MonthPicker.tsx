@@ -35,13 +35,19 @@ export default function MonthPicker() {
   const [balances, setBalances] = useState<{
     groupedBalances: Record<
       string,
-      Array<{ amount: number; createdAt: Date; description: string }>
+      Array<{
+        amount: number
+        createdAt: Date
+        description: string
+        user: string
+      }>
     >
     totals: Record<string, number>
   } | null>(null)
 
   const loadAllBalances = async () => {
     const results = await getAllBalances()
+    console.log('getAllBalances:', results)
     setBalances(results)
   }
 
@@ -119,7 +125,7 @@ export default function MonthPicker() {
             ([employeeName, adjustments], index) => (
               <div key={index} className="mb-6">
                 <h2 className="mb-2 text-xl font-bold">{employeeName}</h2>
-                <div className="grid grid-cols-4 gap-1 sm:gap-4">
+                <div className="grid grid-cols-5 gap-1 sm:gap-4">
                   <div className="flex justify-center font-semibold">
                     Hora Extra
                   </div>
@@ -132,6 +138,9 @@ export default function MonthPicker() {
                   <div className="flex justify-center font-semibold">
                     Motivo
                   </div>
+                  <div className="flex justify-center font-semibold">
+                    Lançado por:
+                  </div>
                 </div>
                 {adjustments.map((adjustment, i) => {
                   const amountInHours = Math.floor(adjustment.amount / 60)
@@ -140,7 +149,7 @@ export default function MonthPicker() {
                   return (
                     <div
                       key={i}
-                      className={`grid grid-cols-4 ${
+                      className={`grid grid-cols-5 ${
                         i % 2 === 0 ? 'bg-gray-100' : 'border bg-white'
                       }`}
                     >
@@ -168,6 +177,9 @@ export default function MonthPicker() {
                         {new Date(adjustment.createdAt).toLocaleDateString()}
                       </div>
                       <div className="flex-wrap">{adjustment.description}</div>
+                      <div className="flex justify-center">
+                        {adjustment.user}
+                      </div>
                     </div>
                   )
                 })}
