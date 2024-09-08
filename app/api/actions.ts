@@ -253,7 +253,7 @@ export async function getEmployeeTotalBalance(employeeId: number) {
     },
   })
 
-  const totalBalance = adjustments.reduce((sum, adjustment) => {
+  const totalBalance = adjustments.reduce((sum: number, adjustment) => {
     return sum + adjustment.amount
   }, 0)
 
