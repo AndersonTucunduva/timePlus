@@ -1,7 +1,6 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
-import { Adjustment, User } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 
 export interface Employee {
@@ -12,6 +11,20 @@ export interface Employee {
   createdAt: Date
   deletedAt: Date | null
 }
+
+/*
+interface Adjustment {
+  amount: number
+  date: Date
+  description: string | null
+  employee: {
+    name: string
+  }
+  user: {
+    name: string
+  }
+}
+*/
 
 export async function authTransaction(password: string) {
   const user = await prisma.user.findFirst({
@@ -128,7 +141,7 @@ export async function getAllBalances() {
           user: string
         }>
       >,
-      adjustment: Adjustment & { employee: Employee; user: User },
+      adjustment,
     ) => {
       const { employee, amount, date, description, user } = adjustment
 
@@ -140,7 +153,7 @@ export async function getAllBalances() {
         amount,
         createdAt: date,
         description: description || '',
-        user: user?.name || 'Usuário desconhecido',
+        user: user.name || 'Usuário desconhecido',
       })
 
       return acc
@@ -156,21 +169,8 @@ export async function getAllBalances() {
     >,
   )
 
-  const totals = Object.keys(groupedBalances).reduce(
-    (acc: Record<string, number>, employeeName: string) => {
-      const total = groupedBalances[employeeName].reduce(
-        (sum, adjustment) => sum + adjustment.amount,
-        0,
-      )
-      acc[employeeName] = total
-      return acc
-    },
-    {} as Record<string, number>,
-  )
-
-  return { groupedBalances, totals }
+  return groupedBalances
 }
-
 export async function getMonthlyBalances(year: number, month: number) {
   const adjustments = await prisma.adjustment.findMany({
     where: {
