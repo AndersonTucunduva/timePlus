@@ -1,7 +1,6 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
-import { Adjustment } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 
 export interface Employee {
@@ -31,6 +30,15 @@ interface Adjustments {
     password: string
     isMaster: boolean
   }
+}
+
+interface Adjustment {
+  id: number
+  employeeId: number
+  date: Date
+  amount: number
+  description: string | null
+  userId: number
 }
 
 export async function authTransaction(password: string) {
