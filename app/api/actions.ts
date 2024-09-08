@@ -12,19 +12,25 @@ export interface Employee {
   deletedAt: Date | null
 }
 
-/*
 interface Adjustment {
   amount: number
   date: Date
   description: string | null
   employee: {
+    id: number
     name: string
+    status: boolean
+    role: string | null
+    createdAt: Date
+    deletedAt: Date | null
   }
   user: {
-    name: string
+    id: number
+    name: string | null // Atualizado para permitir 'null'
+    password: string
+    isMaster: boolean
   }
 }
-*/
 
 export async function authTransaction(password: string) {
   const user = await prisma.user.findFirst({
@@ -123,7 +129,7 @@ export async function addAdjustment(
 }
 
 export async function getAllBalances() {
-  const adjustments = await prisma.adjustment.findMany({
+  const adjustments: Adjustment[] = await prisma.adjustment.findMany({
     include: {
       employee: true,
       user: true,
