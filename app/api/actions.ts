@@ -177,6 +177,7 @@ export async function getAllBalances() {
 
   return groupedBalances
 }
+
 export async function getMonthlyBalances(year: number, month: number) {
   const adjustments = await prisma.adjustment.findMany({
     where: {
