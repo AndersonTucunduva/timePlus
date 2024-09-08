@@ -179,7 +179,7 @@ export async function getAllBalances() {
 }
 
 export async function getMonthlyBalances(year: number, month: number) {
-  const adjustments = await prisma.adjustment.findMany({
+  const adjustments: Adjustment[] = await prisma.adjustment.findMany({
     where: {
       date: {
         gte: new Date(year, month - 1, 1),
