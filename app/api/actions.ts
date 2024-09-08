@@ -117,7 +117,18 @@ export async function getAllBalances() {
   })
 
   const groupedBalances = adjustments.reduce(
-    (acc, adjustment) => {
+    (
+      acc: Record<
+        string,
+        Array<{
+          amount: number
+          createdAt: Date
+          description: string
+          user: string
+        }>
+      >,
+      adjustment,
+    ) => {
       const { employee, amount, date, description, user } = adjustment
 
       if (!acc[employee.name]) {
@@ -128,7 +139,7 @@ export async function getAllBalances() {
         amount,
         createdAt: date,
         description: description || '',
-        user: user.name || 'Usuário desconhecido',
+        user: user?.name || 'Usuário desconhecido',
       })
 
       return acc
@@ -145,7 +156,7 @@ export async function getAllBalances() {
   )
 
   const totals = Object.keys(groupedBalances).reduce(
-    (acc, employeeName) => {
+    (acc: Record<string, number>, employeeName: string) => {
       const total = groupedBalances[employeeName].reduce(
         (sum, adjustment) => sum + adjustment.amount,
         0,
