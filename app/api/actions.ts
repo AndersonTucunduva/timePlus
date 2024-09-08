@@ -1,6 +1,7 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
+import { Adjustment, User } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 
 export interface Employee {
@@ -127,7 +128,7 @@ export async function getAllBalances() {
           user: string
         }>
       >,
-      adjustment,
+      adjustment: Adjustment & { employee: Employee; user: User },
     ) => {
       const { employee, amount, date, description, user } = adjustment
 
