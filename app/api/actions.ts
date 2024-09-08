@@ -193,7 +193,18 @@ export async function getMonthlyBalances(year: number, month: number) {
   })
 
   const groupedBalances = adjustments.reduce(
-    (acc, adjustment) => {
+    (
+      acc: Record<
+        string,
+        Array<{
+          amount: number
+          createdAt: Date
+          description: string
+          user: string
+        }>
+      >,
+      adjustment,
+    ) => {
       const { employee, amount, date, description, user } = adjustment
 
       if (!acc[employee.name]) {
