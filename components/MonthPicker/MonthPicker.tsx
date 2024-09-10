@@ -63,11 +63,10 @@ export default function MonthPicker() {
 
   const loadAllBalances = async () => {
     try {
-      // Aqui assumimos que `getAllBalances` retorna um `Record<string, Balance[]>`
       const results: Record<string, Balance[]> = await getAllBalances()
 
       const processedResults = processBalances(results)
-      setBalances(processedResults) // Aqui esperamos o tipo `BalancesResults`
+      setBalances(processedResults)
     } catch (error) {
       console.error('Erro ao carregar os balances:', error)
     }
@@ -80,13 +79,12 @@ export default function MonthPicker() {
   const handleSearch = async () => {
     if (selectedMonth && selectedYear) {
       try {
-        // Ajuste o tipo de acordo com o retorno real da função
         const results: BalancesResults = await getMonthlyBalances(
           parseInt(selectedYear),
           parseInt(selectedMonth),
         )
 
-        setBalances(results) // Agora, setBalances recebe diretamente o BalancesResults
+        setBalances(results)
       } catch (error) {
         console.error('Erro ao buscar balances mensais:', error)
       }
@@ -173,7 +171,12 @@ export default function MonthPicker() {
                 {adjustments.map((adjustment, i) => {
                   const amountInHours = Math.floor(adjustment.amount / 60)
                   const remainingMinutes = adjustment.amount % 60
-
+                  console.log(
+                    'amountInHours:',
+                    amountInHours,
+                    'remainingMinutes:',
+                    remainingMinutes,
+                  )
                   return (
                     <div
                       key={i}
@@ -224,13 +227,11 @@ export default function MonthPicker() {
                     }`}
                   >
                     <p className="flex text-xl font-semibold">Total:</p>
-                    <p>{balances.totals[employeeName]} Min.</p>
+                    {/*     <p>{balances.totals[employeeName]} Min.</p> */}
                     <p>
-                      (
                       {convertMinutesToHoursAndMinutes(
                         balances.totals[employeeName],
                       )}
-                      )
                     </p>
                   </div>
                 </div>
