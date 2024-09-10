@@ -12,6 +12,35 @@ export interface Employee {
   deletedAt: Date | null
 }
 
+interface Adjustments {
+  amount: number
+  date: Date
+  description: string | null
+  employee: {
+    id: number
+    name: string
+    status: boolean
+    role: string | null
+    createdAt: Date
+    deletedAt: Date | null
+  }
+  user: {
+    id: number
+    name: string | null // Atualizado para permitir 'null'
+    password: string
+    isMaster: boolean
+  }
+}
+
+interface Adjustment {
+  id: number
+  employeeId: number
+  date: Date
+  amount: number
+  description: string | null
+  userId: number
+}
+
 export async function authTransaction(password: string) {
   const user = await prisma.user.findFirst({
     where: { password },
@@ -109,7 +138,7 @@ export async function addAdjustment(
 }
 
 export async function getAllBalances() {
-  const adjustments = await prisma.adjustment.findMany({
+  const adjustments: Adjustments[] = await prisma.adjustment.findMany({
     include: {
       employee: true,
       user: true,
@@ -139,7 +168,7 @@ export async function getAllBalances() {
         amount,
         createdAt: date,
         description: description || '',
-        user: user?.name || 'Usuário desconhecido',
+        user: user.name || 'Usuário desconhecido',
       })
 
       return acc
@@ -155,23 +184,11 @@ export async function getAllBalances() {
     >,
   )
 
-  const totals = Object.keys(groupedBalances).reduce(
-    (acc: Record<string, number>, employeeName: string) => {
-      const total = groupedBalances[employeeName].reduce(
-        (sum, adjustment) => sum + adjustment.amount,
-        0,
-      )
-      acc[employeeName] = total
-      return acc
-    },
-    {} as Record<string, number>,
-  )
-
-  return { groupedBalances, totals }
+  return groupedBalances
 }
 
 export async function getMonthlyBalances(year: number, month: number) {
-  const adjustments = await prisma.adjustment.findMany({
+  const adjustments: Adjustments[] = await prisma.adjustment.findMany({
     where: {
       date: {
         gte: new Date(year, month - 1, 1),
@@ -185,7 +202,18 @@ export async function getMonthlyBalances(year: number, month: number) {
   })
 
   const groupedBalances = adjustments.reduce(
-    (acc, adjustment) => {
+    (
+      acc: Record<
+        string,
+        Array<{
+          amount: number
+          createdAt: Date
+          description: string
+          user: string
+        }>
+      >,
+      adjustment,
+    ) => {
       const { employee, amount, date, description, user } = adjustment
 
       if (!acc[employee.name]) {
@@ -234,9 +262,12 @@ export async function getEmployeeTotalBalance(employeeId: number) {
     },
   })
 
-  const totalBalance = adjustments.reduce((sum, adjustment) => {
-    return sum + adjustment.amount
-  }, 0)
+  const totalBalance = adjustments.reduce(
+    (sum: number, adjustment: Adjustment) => {
+      return sum + adjustment.amount
+    },
+    0,
+  )
 
   return totalBalance
 }
