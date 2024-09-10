@@ -27,28 +27,50 @@ const months = [
   { value: '12', label: 'Dezembro' },
 ]
 
+type Balance = {
+  amount: number
+  createdAt: Date
+  description: string
+  user: string
+}
+
+type BalancesResults = {
+  groupedBalances: Record<string, Balance[]>
+  totals: Record<string, number>
+}
+
 export default function MonthPicker() {
   const [selectedMonth, setSelectedMonth] = useState('')
   const [selectedYear, setSelectedYear] = useState(
     new Date().getFullYear().toString(),
   )
-  const [balances, setBalances] = useState<{
-    groupedBalances: Record<
-      string,
-      Array<{
-        amount: number
-        createdAt: Date
-        description: string
-        user: string
-      }>
-    >
-    totals: Record<string, number>
-  } | null>(null)
+  const [balances, setBalances] = useState<BalancesResults | null>(null)
+
+  const processBalances = (
+    results: Record<string, Balance[]>,
+  ): BalancesResults => {
+    const totals: Record<string, number> = {}
+
+    for (const [employeeName, adjustments] of Object.entries(results)) {
+      totals[employeeName] = adjustments.reduce(
+        (sum, adjustment) => sum + adjustment.amount,
+        0,
+      )
+    }
+
+    return { groupedBalances: results, totals }
+  }
 
   const loadAllBalances = async () => {
-    const results = await getAllBalances()
-    console.log('getAllBalances:', results)
-    setBalances(results)
+    try {
+      // Aqui assumimos que `getAllBalances` retorna um `Record<string, Balance[]>`
+      const results: Record<string, Balance[]> = await getAllBalances()
+
+      const processedResults = processBalances(results)
+      setBalances(processedResults) // Aqui esperamos o tipo `BalancesResults`
+    } catch (error) {
+      console.error('Erro ao carregar os balances:', error)
+    }
   }
 
   useEffect(() => {
@@ -57,11 +79,17 @@ export default function MonthPicker() {
 
   const handleSearch = async () => {
     if (selectedMonth && selectedYear) {
-      const results = await getMonthlyBalances(
-        parseInt(selectedYear),
-        parseInt(selectedMonth),
-      )
-      setBalances(results)
+      try {
+        // Ajuste o tipo de acordo com o retorno real da função
+        const results: BalancesResults = await getMonthlyBalances(
+          parseInt(selectedYear),
+          parseInt(selectedMonth),
+        )
+
+        setBalances(results) // Agora, setBalances recebe diretamente o BalancesResults
+      } catch (error) {
+        console.error('Erro ao buscar balances mensais:', error)
+      }
     } else {
       loadAllBalances()
     }
@@ -130,7 +158,7 @@ export default function MonthPicker() {
                     Hora Extra
                   </div>
                   <div className="flex justify-center font-semibold">
-                    Hora devedora{' '}
+                    Hora devedora
                   </div>
                   <div className="flex justify-center font-semibold">
                     Data do lançamento
