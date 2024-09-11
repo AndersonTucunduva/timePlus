@@ -156,7 +156,7 @@ export async function getAllBalances() {
           user: string
         }>
       >,
-      adjustment,
+      adjustment: Adjustments,
     ) => {
       const { employee, amount, date, description, user } = adjustment
 
