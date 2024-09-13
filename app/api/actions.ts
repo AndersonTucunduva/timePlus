@@ -73,6 +73,15 @@ export async function resetPassword(
   return false
 }
 
+export async function accessPass(masterPassword: string) {
+  const masterUser = await prisma.user.findFirst({
+    where: { isMaster: true, password: masterPassword },
+  })
+  if (masterUser) {
+    return true
+  }
+}
+
 export async function newEmployee(
   name: string,
   role: string | null,
