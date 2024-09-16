@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# TimePlus - Lançamento de banco de Horas
 
-## Getting Started
+Este projeto é uma aplicação de gerenciamento de banco de horas para lojas em geral, criado a partir da necessidade de um cliente real e conforme as suas especificações, com senha para lançamento de horas para que não seja permitido a qualquer um fazer os lançamentos.
 
-First, run the development server:
+## Tecnologias Utilizadas
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Next.js 14.2.5**: Framework React para construção de aplicações web.
+- **Prisma 5.18.0**: ORM utilizado para manipulação do banco de dados.
+- **Tailwind CSS 3.4.1**: Framework de CSS utilitário para estilização da interface.
+- **Shadcn**: Biblioteca de componentes para uma melhor experiência de usuário.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Funcionalidades
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Tela Inicial**: Página principal do aplicativo, onde são listados os colaboradores.
+  ![Tela Inicial](./screenshots/lançamentos.png)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **Adicionar Novo Colaborador**: Interface para adicionar um novo colaborador.
+  ![Nova Tarefa](./screenshots/add-colaborador.png)
 
-## Learn More
+- **Visualização de Tarefas**: Página onde são listadas todas as horas lançadas e separadas por colaborador.
+  ![Tarefas](./screenshots/relatorio.png)
 
-To learn more about Next.js, take a look at the following resources:
+- **Filtro por Meses**: O sistema trás por padrão todos os lançamentos mas sendo possível aplicar filtros por mês.
+  ![Departamentos](./screenshots/filtro-relatorio.png)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Menu**: Menu drawer com acesso as telas do sistema.
+  ![Edição de tarefa](./screenshots/menu.png)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- **Lançamento de Horas**: Popup para lançamento das horas, tanto podendo ser positivo ou negativo.
+  ![Relatório](./screenshots/lancamento-horas.png)
 
-## Deploy on Vercel
+- **Senha**: Necessario senha para inserir horas no banco, com exclusividade para deletar e alterar senha apenas para usuários master
+  ![Aviso](./screenshots/senha-confirm.png)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Instalação e Configuração
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. Clone este repositório:
+   ```bash
+   git clone https://github.com/seu-usuario/seu-repositorio.git
+   cd seu-repositorio
+
+2. Instale as dependências:
+   ```bash
+   npm install
+   npx prisma migrate dev
+   npm run dev
+
+3. Abra http://localhost:3000 no seu navegador para ver o projeto em ação.
+
+Estrutura do Projeto
+- /src: Contém o código-fonte da aplicação.
+- /prisma: Configurações e migrações do banco de dados Prisma.
+- /screenshots: Imagens das principais telas do projeto, utilizadas neste README.
+Contribuições
+- Contribuições são bem-vindas! Se você encontrar algum problema ou tiver sugestões, sinta-se à vontade para abrir uma issue ou enviar um pull request.
+
+Licença
+- Este projeto está licenciado sob a MIT License.
+
