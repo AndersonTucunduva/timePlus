@@ -95,9 +95,11 @@ export default function MonthPicker() {
 
   // Função para converter minutos em horas e minutos
   function convertMinutesToHoursAndMinutes(minutes: number) {
-    const hours = Math.floor(minutes / 60)
-    const remainingMinutes = minutes % 60
-    return `${hours}h ${remainingMinutes}min`
+    const sign = minutes < 0 ? '-' : '' // Verifica se o valor é negativo
+    const absoluteMinutes = Math.abs(minutes) // Trabalha com o valor absoluto
+    const hours = Math.floor(absoluteMinutes / 60)
+    const remainingMinutes = absoluteMinutes % 60
+    return `${sign}${hours}h ${remainingMinutes}min`
   }
 
   return (
@@ -169,14 +171,12 @@ export default function MonthPicker() {
                   </div>
                 </div>
                 {adjustments.map((adjustment, i) => {
-                  const amountInHours = Math.floor(adjustment.amount / 60)
-                  const remainingMinutes = adjustment.amount % 60
-                  console.log(
-                    'amountInHours:',
-                    amountInHours,
-                    'remainingMinutes:',
-                    remainingMinutes,
+                  const amountInHours = Math.floor(
+                    Math.abs(adjustment.amount) / 60,
                   )
+                  const remainingMinutes = Math.abs(adjustment.amount) % 60
+                  const sign = adjustment.amount < 0 ? '-' : ''
+
                   return (
                     <div
                       key={i}
@@ -189,7 +189,8 @@ export default function MonthPicker() {
                           <>
                             {adjustment.amount} Min.
                             <span>
-                              ({amountInHours}h {remainingMinutes}min)
+                              ({sign}
+                              {amountInHours}h {remainingMinutes}min)
                             </span>
                           </>
                         )}
@@ -199,7 +200,8 @@ export default function MonthPicker() {
                           <>
                             {adjustment.amount} Min.
                             <span>
-                              ({amountInHours}h {remainingMinutes}min)
+                              ({sign}
+                              {amountInHours}h {remainingMinutes}min)
                             </span>
                           </>
                         )}
