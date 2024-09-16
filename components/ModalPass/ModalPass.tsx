@@ -1,4 +1,6 @@
-import { authTransaction } from '@/app/api/actions'
+'use client'
+
+import { accessPass } from '@/app/api/actions'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -10,46 +12,38 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { Check } from 'lucide-react'
-
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-interface Props {
-  handleSaveAdjustments: (userId: number) => void
-}
-
-export function ModalConfirm({ handleSaveAdjustments }: Props) {
+export function ModalPass() {
   const [password, setPassword] = useState('')
+  const router = useRouter()
   const [open, setOpen] = useState(false)
 
   async function handleTransaction() {
-    const success = await authTransaction(password)
+    const success = await accessPass(password)
 
-    if (success && success.id) {
-      // Verifica se o 'success' tem um 'id'
-      handleSaveAdjustments(success.id)
-      setOpen(false)
+    if (success) {
+      setOpen(false) // Fechar o modal após sucesso
+      router.push('/pass')
     } else {
       alert('Senha incorreta')
     }
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={(isOpen) => setOpen(isOpen)}>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          className="mt-2 flex w-full gap-2 bg-green-500 text-white hover:bg-green-600 hover:text-white"
-        >
-          Salvar
-          <Check width={20} height={20} />
-        </Button>
+        <Link href="#" className="text-white">
+          Password
+        </Link>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-slate-800">Atenção</DialogTitle>
           <DialogDescription>
-            Digite sua senha para confirmar a transação!!
+            Digite uma senha Master para liberar o acesso!
           </DialogDescription>
         </DialogHeader>
 

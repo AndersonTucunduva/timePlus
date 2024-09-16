@@ -76,9 +76,11 @@ export default function ModalAdjustments({ employeeId }: Props) {
   }
 
   function convertMinutesToTimeFormat(minutes: number) {
-    const hours = Math.floor(minutes / 60)
-    const remainingMinutes = minutes % 60
-    return `${hours}h ${remainingMinutes}min`
+    const sign = minutes < 0 ? '-' : '' // Verifica se o valor é negativo
+    const absoluteMinutes = Math.abs(minutes) // Usa o valor absoluto para o cálculo
+    const hours = Math.floor(absoluteMinutes / 60)
+    const remainingMinutes = absoluteMinutes % 60
+    return `${sign}${hours}h ${remainingMinutes}min`
   }
 
   async function handleSaveAdjustments(userId: number) {

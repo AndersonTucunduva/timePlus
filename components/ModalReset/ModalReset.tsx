@@ -1,4 +1,6 @@
-import { authTransaction } from '@/app/api/actions'
+'use client'
+
+import { resetPassword } from '@/app/api/actions'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -11,26 +13,28 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Check } from 'lucide-react'
-
+import { useToast } from '@/components/ui/use-toast'
 import { useState } from 'react'
 
 interface Props {
-  handleSaveAdjustments: (userId: number) => void
+  userId: number
 }
 
-export function ModalConfirm({ handleSaveAdjustments }: Props) {
+export function ModalReset({ userId }: Props) {
   const [password, setPassword] = useState('')
   const [open, setOpen] = useState(false)
+  const { toast } = useToast()
 
   async function handleTransaction() {
-    const success = await authTransaction(password)
-
-    if (success && success.id) {
-      // Verifica se o 'success' tem um 'id'
-      handleSaveAdjustments(success.id)
+    if (password === '') return
+    const result = await resetPassword(userId, password)
+    if (result) {
+      toast({
+        variant: 'default',
+        description: 'Senha alterada com Sucesso',
+        duration: 1000,
+      })
       setOpen(false)
-    } else {
-      alert('Senha incorreta')
     }
   }
 
@@ -39,9 +43,9 @@ export function ModalConfirm({ handleSaveAdjustments }: Props) {
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="mt-2 flex w-full gap-2 bg-green-500 text-white hover:bg-green-600 hover:text-white"
+          className="mt-2 flex w-full gap-2 bg-red-500 text-white hover:bg-red-600 hover:text-white"
         >
-          Salvar
+          Alterar senha
           <Check width={20} height={20} />
         </Button>
       </DialogTrigger>
@@ -49,7 +53,7 @@ export function ModalConfirm({ handleSaveAdjustments }: Props) {
         <DialogHeader>
           <DialogTitle className="text-slate-800">Atenção</DialogTitle>
           <DialogDescription>
-            Digite sua senha para confirmar a transação!!
+            Digite a nova senha para esse usuário!
           </DialogDescription>
         </DialogHeader>
 

@@ -12,6 +12,13 @@ export interface Employee {
   deletedAt: Date | null
 }
 
+export interface User {
+  id: number
+  name: string | null
+  password: string
+  isMaster: boolean
+}
+
 interface Adjustments {
   amount: number
   date: Date
@@ -53,24 +60,30 @@ export async function authTransaction(password: string) {
   return null
 }
 
-export async function resetPassword(
-  masterPassword: string,
-  newPassword: string,
-) {
-  const masterUser = await prisma.user.findFirst({
-    where: { isMaster: true, password: masterPassword },
+export async function resetPassword(userId: number, newPassword: string) {
+  const result = await prisma.user.findFirst({
+    where: { id: userId },
   })
 
-  if (masterUser) {
-    await prisma.user.updateMany({
-      where: { isMaster: false },
+  if (result) {
+    await prisma.user.update({
+      where: { id: result.id },
       data: { password: newPassword },
     })
-
+    revalidatePath('/pass')
     return true
   }
 
   return false
+}
+
+export async function accessPass(masterPassword: string) {
+  const masterUser = await prisma.user.findFirst({
+    where: { isMaster: true, password: masterPassword },
+  })
+  if (masterUser) {
+    return true
+  }
 }
 
 export async function newEmployee(
@@ -105,6 +118,11 @@ export async function getAllEmployees() {
       deletedAt: null,
     },
   })
+  return result
+}
+
+export async function getAllUsers() {
+  const result = await prisma.user.findMany()
   return result
 }
 
