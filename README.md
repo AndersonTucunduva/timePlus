@@ -1,6 +1,6 @@
 # TimePlus - Lançamento de banco de Horas
 
-Este projeto é uma aplicação de gerenciamento de banco de horas para lojas em geral, criado apartir da necessidade de um cliente real e conforme as suas especificações, com senha para lançamento de horas para que não seja permitido a qualquer um fazer os lançamentos.
+Este projeto é uma aplicação de gerenciamento de banco de horas para lojas em geral, criado a partir da necessidade de um cliente real e conforme as suas especificações, com senha para lançamento de horas para que não seja permitido a qualquer um fazer os lançamentos.
 
 ## Tecnologias Utilizadas
 
@@ -20,7 +20,7 @@ Este projeto é uma aplicação de gerenciamento de banco de horas para lojas em
 - **Visualização de Tarefas**: Página onde são listadas todas as horas lançadas e separadas por colaborador.
   ![Tarefas](./screenshots/relatorio.png)
 
-- **Filtro por Meses**: O sistema tras por padrão todos os lançamentos mas sendo possivel aplicar filtros por mês.
+- **Filtro por Meses**: O sistema trás por padrão todos os lançamentos mas sendo possível aplicar filtros por mês.
   ![Departamentos](./screenshots/filtro-relatorio.png)
 
 - **Menu**: Menu drawer com acesso as telas do sistema.
@@ -29,7 +29,7 @@ Este projeto é uma aplicação de gerenciamento de banco de horas para lojas em
 - **Lançamento de Horas**: Popup para lançamento das horas, tanto podendo ser positivo ou negativo.
   ![Relatório](./screenshots/lancamento-horas.png)
 
-- **Senha**: Necessario senha para inserir horas no banco, com exclusividade para deletar e alterar senha apenas para usuarios master
+- **Senha**: Necessario senha para inserir horas no banco, com exclusividade para deletar e alterar senha apenas para usuários master
   ![Aviso](./screenshots/senha-confirm.png)
 
 ## Instalação e Configuração
