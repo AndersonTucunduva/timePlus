@@ -1,3 +1,4 @@
+console.log('Carregando next.config.js...')
 /** @type {import('next').NextConfig} */
 const nextConfig = {}
 
