@@ -25,7 +25,7 @@ export function ModalDelete({ handleDelete }: Props) {
   async function handleTransaction() {
     const success = await authTransaction(password)
 
-    if (success) {
+    if (success?.isMaster === true) {
       handleDelete()
       setOpen(false)
     } else {
