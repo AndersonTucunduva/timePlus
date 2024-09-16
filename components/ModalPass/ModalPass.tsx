@@ -1,4 +1,4 @@
-'use client' // Marca o componente como Client Component
+'use client'
 
 import { accessPass } from '@/app/api/actions'
 import { Button } from '@/components/ui/button'
@@ -50,6 +50,7 @@ export function ModalPass() {
         <div className="flex items-center py-3">
           <Input
             id="password"
+            autoComplete="off"
             type="password"
             className="col-span-3"
             value={password}

@@ -55,6 +55,7 @@ export function ModalDelete({ handleDelete }: Props) {
         <div className="flex items-center py-3">
           <Input
             id="password"
+            autoComplete="off"
             type="password"
             className="col-span-3"
             value={password}
