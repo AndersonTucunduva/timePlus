@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "vercel-build": "npx prisma migrate deploy",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -11,6 +12,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.18.0",
+    "prisma": "^5.18.0",
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-popover": "^1.1.1",
     "@radix-ui/react-select": "^2.1.1",
