@@ -131,12 +131,12 @@ export default function ModalAdjustments({ employeeId }: Props) {
 
   return (
     <div>
-      <div className="mb-4 flex flex-col justify-center border-b-2 py-2 pb-4">
+      <div className="mb-4 flex flex-col justify-center border-b-2 pb-4">
         <p className="flex justify-center text-lg font-medium">
           Total de Horas:
         </p>
         <p
-          className={`flex justify-center rounded-full p-2 text-xl font-bold ${
+          className={`flex justify-center rounded-full text-xl font-bold md:p-2 ${
             totalBalance !== null
               ? totalBalance >= 0
                 ? 'bg-blue-600 text-white'
@@ -154,18 +154,18 @@ export default function ModalAdjustments({ employeeId }: Props) {
           onClick={() => setIsAdding(true)}
           className={`mr-4 flex items-center rounded-lg p-2 ${isAdding ? 'bg-blue-500 ring-1 ring-black' : 'bg-gray-400'} text-white`}
         >
-          <Plus className="mr-2" />
+          <Plus className="mr-1" />
           Extra
         </button>
         <button
           onClick={() => setIsAdding(false)}
           className={`flex items-center rounded-lg p-2 ${!isAdding ? 'bg-red-500 ring-1 ring-black' : 'bg-gray-400'} text-white`}
         >
-          <Minus className="mr-2" />
+          <Minus className="mr-1" />
           Falta
         </button>
       </div>
-      <div className="mt-4 flex max-w-48 items-center">
+      <div className="mt-3 flex max-w-48 items-center md:mt-4">
         <div className="mr-2 h-7 w-7">
           {isAdding ? <Plus className="mr-2" /> : <Minus className="mr-2" />}
         </div>
@@ -187,8 +187,10 @@ export default function ModalAdjustments({ employeeId }: Props) {
           onChange={handleChangeDescription}
         />
       </div>
-      <ModalConfirm handleSaveAdjustments={handleSaveAdjustments} />
-      <ModalDelete handleDelete={handleDelete} />
+      <div className="flex gap-1">
+        <ModalDelete handleDelete={handleDelete} />
+        <ModalConfirm handleSaveAdjustments={handleSaveAdjustments} />
+      </div>
     </div>
   )
 }
