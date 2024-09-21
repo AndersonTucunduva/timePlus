@@ -2,6 +2,7 @@ import Users from '@/components/Users/Users'
 import { getAllUsers, User } from '../api/actions'
 
 export default async function pass() {
+  'use server'
   const users: User[] = await getAllUsers()
   return (
     <div>
