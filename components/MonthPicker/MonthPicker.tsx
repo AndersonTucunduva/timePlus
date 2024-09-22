@@ -153,20 +153,20 @@ export default function MonthPicker() {
             ([employeeName, adjustments], index) => (
               <div key={index} className="mb-6">
                 <h2 className="mb-2 text-xl font-bold">{employeeName}</h2>
-                <div className="grid grid-cols-5 gap-1 sm:gap-4">
-                  <div className="flex justify-center font-semibold">
+                <div className="grid grid-cols-3 gap-1 md:grid-cols-5 md:gap-2">
+                  <div className="flex justify-center text-xs font-semibold md:text-base">
                     Hora Extra
                   </div>
-                  <div className="flex justify-center font-semibold">
+                  <div className="flex justify-center text-xs font-semibold md:text-base">
                     Hora devedora
                   </div>
-                  <div className="flex justify-center font-semibold">
+                  <div className="flex justify-center text-xs font-semibold md:text-base">
                     Data do lançamento
                   </div>
-                  <div className="flex justify-center font-semibold">
+                  <div className="hidden justify-center text-xs font-semibold md:flex md:text-base">
                     Motivo
                   </div>
-                  <div className="flex justify-center font-semibold">
+                  <div className="flex justify-center text-xs font-semibold md:text-base">
                     Lançado por:
                   </div>
                 </div>
@@ -180,11 +180,11 @@ export default function MonthPicker() {
                   return (
                     <div
                       key={i}
-                      className={`grid grid-cols-5 ${
+                      className={`grid grid-cols-3 md:grid-cols-5 ${
                         i % 2 === 0 ? 'bg-gray-100' : 'border bg-white'
                       }`}
                     >
-                      <div className="flex flex-col items-center justify-center gap-2 text-lg font-medium text-blue-700 sm:flex-row">
+                      <div className="text-sx flex flex-col items-center justify-center gap-2 font-medium text-blue-700 sm:flex-row md:text-lg">
                         {adjustment.amount > 0 && (
                           <>
                             {adjustment.amount} Min.
@@ -195,7 +195,7 @@ export default function MonthPicker() {
                           </>
                         )}
                       </div>
-                      <div className="flex flex-col items-center justify-center gap-2 text-lg font-medium text-red-700 sm:flex-row">
+                      <div className="flex flex-col items-center justify-center gap-2 text-xs font-medium text-red-700 sm:flex-row md:text-lg">
                         {adjustment.amount < 0 && (
                           <>
                             {adjustment.amount} Min.
@@ -209,28 +209,32 @@ export default function MonthPicker() {
                       <div className="flex justify-center text-xs sm:text-base">
                         {new Date(adjustment.createdAt).toLocaleDateString()}
                       </div>
-                      <div className="flex-wrap">{adjustment.description}</div>
-                      <div className="flex justify-center">
+                      <div className="hidden flex-wrap text-xs md:flex md:text-base">
+                        {adjustment.description}
+                      </div>
+                      <div className="hidden justify-center md:flex">
                         {adjustment.user}
                       </div>
                     </div>
                   )
                 })}
-                <div className="mt-2 grid grid-cols-5 font-bold">
+                <div className="mt-2 grid grid-cols-4 font-bold md:grid-cols-5">
                   <div></div>
                   <div></div>
                   <div></div>
                   <div></div>
                   <div
-                    className={`flex flex-col items-center justify-center gap-3 px-1 py-1 font-bold sm:flex-row ${
+                    className={`flex flex-col items-center justify-center gap-3 px-1 py-1 text-xs font-bold sm:flex-row md:text-base ${
                       balances.totals[employeeName] >= 0
                         ? 'bg-blue-300'
                         : 'bg-red-300'
                     }`}
                   >
-                    <p className="flex text-xl font-semibold">Total:</p>
+                    <p className="flex text-xs font-semibold md:text-xl">
+                      Total:
+                    </p>
                     {/*     <p>{balances.totals[employeeName]} Min.</p> */}
-                    <p>
+                    <p className="text-xs md:text-base">
                       {convertMinutesToHoursAndMinutes(
                         balances.totals[employeeName],
                       )}
