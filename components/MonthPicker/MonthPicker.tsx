@@ -103,7 +103,7 @@ export default function MonthPicker() {
   }
 
   return (
-    <div className="p-2">
+    <div className="max-w-80 p-2 md:max-w-full">
       <div className="flex justify-center gap-4">
         <Select onValueChange={(value) => setSelectedMonth(value)}>
           <SelectTrigger className="w-[180px]">
@@ -195,7 +195,7 @@ export default function MonthPicker() {
                           </>
                         )}
                       </div>
-                      <div className="flex flex-col items-center justify-center gap-2 text-xs font-medium text-red-700 sm:flex-row md:text-lg">
+                      <div className="text-sx flex flex-col items-center justify-center gap-2 text-xs font-medium text-red-700 sm:flex-row md:text-lg">
                         {adjustment.amount < 0 && (
                           <>
                             {adjustment.amount} Min.
