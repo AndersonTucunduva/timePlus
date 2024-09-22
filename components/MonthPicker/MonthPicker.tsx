@@ -11,6 +11,7 @@ import {
   SelectLabel,
 } from '@/components/ui/select'
 import { getAllBalances, getMonthlyBalances } from '@/app/api/actions'
+import { Button } from '../ui/button'
 
 const months = [
   { value: '01', label: 'Janeiro' },
@@ -104,6 +105,14 @@ export default function MonthPicker() {
 
   return (
     <div className="max-w-80 p-2 md:max-w-full">
+      <div className="mb-4 flex justify-center">
+        <Button
+          onClick={loadAllBalances}
+          className="rounded-md bg-green-500 px-4 py-2 text-white"
+        >
+          Buscar Tudo
+        </Button>
+      </div>
       <div className="flex justify-center gap-4">
         <Select onValueChange={(value) => setSelectedMonth(value)}>
           <SelectTrigger className="w-[180px]">
@@ -139,12 +148,12 @@ export default function MonthPicker() {
           </SelectContent>
         </Select>
 
-        <button
+        <Button
           onClick={handleSearch}
           className="rounded-md bg-blue-500 px-4 py-2 text-white"
         >
           Buscar
-        </button>
+        </Button>
       </div>
 
       {balances && (
