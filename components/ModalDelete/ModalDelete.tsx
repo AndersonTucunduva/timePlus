@@ -63,7 +63,7 @@ export function ModalDelete({ handleDelete }: Props) {
           />
         </div>
 
-        <DialogFooter>
+        <DialogFooter className="flex gap-1 md:gap-0">
           <Button
             onClick={() => setOpen(false)}
             className="bg-slate-600 hover:bg-slate-700"

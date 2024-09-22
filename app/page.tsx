@@ -8,7 +8,7 @@ export default async function Home() {
 
   return (
     <div className="p-3">
-      <div className="mb-4 flex">
+      <div className="mb-4 w-full flex-1">
         <InputEmployee />
       </div>
       <div>

@@ -26,7 +26,7 @@ export default function InputEmployee() {
     }
   }
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+    <div className="flex flex-col gap-3 md:flex-row md:items-center">
       <button
         className="flex h-10 w-14 items-center justify-center rounded-xl bg-green-500 text-white hover:bg-green-600"
         onClick={handlePlusClick}

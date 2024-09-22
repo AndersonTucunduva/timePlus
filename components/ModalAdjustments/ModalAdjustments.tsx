@@ -136,7 +136,7 @@ export default function ModalAdjustments({ employeeId }: Props) {
           Total de Horas:
         </p>
         <p
-          className={`flex justify-center rounded-full text-xl font-bold md:p-2 ${
+          className={`flex justify-center rounded-full p-2 text-xl font-bold ${
             totalBalance !== null
               ? totalBalance >= 0
                 ? 'bg-blue-600 text-white'
@@ -165,7 +165,7 @@ export default function ModalAdjustments({ employeeId }: Props) {
           Falta
         </button>
       </div>
-      <div className="mt-3 flex max-w-48 items-center md:mt-4">
+      <div className="ml-4 mt-4 flex max-w-48 items-center justify-center md:ml-0">
         <div className="mr-2 h-7 w-7">
           {isAdding ? <Plus className="mr-2" /> : <Minus className="mr-2" />}
         </div>
