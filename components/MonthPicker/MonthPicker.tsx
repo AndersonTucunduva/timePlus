@@ -175,7 +175,7 @@ export default function MonthPicker() {
                   <div className="hidden justify-center text-xs font-semibold md:flex md:text-base">
                     Motivo
                   </div>
-                  <div className="flex justify-center text-xs font-semibold md:text-base">
+                  <div className="hidden justify-center text-xs font-semibold md:flex md:text-base">
                     Lançado por:
                   </div>
                 </div>
