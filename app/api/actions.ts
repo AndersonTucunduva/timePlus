@@ -161,6 +161,9 @@ export async function getAllBalances() {
       employee: true,
       user: true,
     },
+    orderBy: {
+      date: 'desc',
+    },
   })
 
   const groupedBalances = adjustments.reduce(
@@ -216,6 +219,9 @@ export async function getMonthlyBalances(year: number, month: number) {
     include: {
       employee: true,
       user: true,
+    },
+    orderBy: {
+      date: 'desc',
     },
   })
 

@@ -196,10 +196,10 @@ export default function MonthPicker() {
                       <div className="text-sx flex flex-col items-center justify-center gap-2 font-medium text-blue-700 sm:flex-row md:text-lg">
                         {adjustment.amount > 0 && (
                           <>
-                            {adjustment.amount} Min.
+                            {/* adjustment.amount Min. */}
                             <span>
-                              ({sign}
-                              {amountInHours}h {remainingMinutes}min)
+                              {sign}
+                              {amountInHours}h {remainingMinutes}min
                             </span>
                           </>
                         )}
@@ -207,10 +207,10 @@ export default function MonthPicker() {
                       <div className="text-sx flex flex-col items-center justify-center gap-2 text-xs font-medium text-red-700 sm:flex-row md:text-lg">
                         {adjustment.amount < 0 && (
                           <>
-                            {adjustment.amount} Min.
+                            {/* adjustment.amount Min. */}
                             <span>
-                              ({sign}
-                              {amountInHours}h {remainingMinutes}min)
+                              {sign}
+                              {amountInHours}h {remainingMinutes}min
                             </span>
                           </>
                         )}
