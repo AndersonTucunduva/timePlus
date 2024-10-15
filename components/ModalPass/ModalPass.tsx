@@ -53,6 +53,7 @@ export function ModalPass() {
             autoComplete="off"
             type="password"
             className="col-span-3"
+            name="random-field"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
