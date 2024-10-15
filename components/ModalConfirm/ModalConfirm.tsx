@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Check } from 'lucide-react'
-
 import { useState } from 'react'
 
 interface Props {
@@ -21,21 +20,33 @@ interface Props {
 export function ModalConfirm({ handleSaveAdjustments }: Props) {
   const [password, setPassword] = useState('')
   const [open, setOpen] = useState(false)
+  const [showPasswordInput, setShowPasswordInput] = useState(false)
 
   async function handleTransaction() {
     const success = await authTransaction(password)
 
     if (success && success.id) {
-      // Verifica se o 'success' tem um 'id'
       handleSaveAdjustments(success.id)
       setOpen(false)
+      setPassword('') // Limpa o campo de senha após sucesso
     } else {
       alert('Senha incorreta')
     }
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        setOpen(isOpen)
+        if (isOpen) {
+          setShowPasswordInput(true) // Mostra o input quando o modal é aberto
+        } else {
+          setShowPasswordInput(false) // Remove o input quando o modal é fechado
+          setPassword('') // Limpa a senha ao fechar o modal
+        }
+      }}
+    >
       <DialogTrigger asChild>
         <Button
           variant="outline"
@@ -52,18 +63,21 @@ export function ModalConfirm({ handleSaveAdjustments }: Props) {
             Digite sua senha para confirmar a transação!!
           </DialogDescription>
         </DialogHeader>
-
-        <div className="flex items-center py-3">
-          <Input
-            id="password"
-            autoComplete="off"
-            type="password"
-            className="col-span-3"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-
+        <form autoComplete="off">
+          <div className="flex items-center py-3">
+            {showPasswordInput && (
+              <Input
+                id="password"
+                autoComplete="new-password"
+                name="random-password-field"
+                type="password"
+                className="col-span-3"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            )}
+          </div>
+        </form>
         <DialogFooter>
           <Button
             onClick={() => setOpen(false)}
