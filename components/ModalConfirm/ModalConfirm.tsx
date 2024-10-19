@@ -40,10 +40,10 @@ export function ModalConfirm({ handleSaveAdjustments }: Props) {
       onOpenChange={(isOpen) => {
         setOpen(isOpen)
         if (isOpen) {
-          setShowPasswordInput(true) // Mostra o input quando o modal é aberto
+          setShowPasswordInput(true)
         } else {
-          setShowPasswordInput(false) // Remove o input quando o modal é fechado
-          setPassword('') // Limpa a senha ao fechar o modal
+          setShowPasswordInput(false)
+          setPassword('')
         }
       }}
     >
