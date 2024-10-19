@@ -157,6 +157,11 @@ export async function addAdjustment(
 
 export async function getAllBalances() {
   const adjustments: Adjustments[] = await prisma.adjustment.findMany({
+    where: {
+      employee: {
+        deletedAt: null,
+      },
+    },
     include: {
       employee: true,
       user: true,

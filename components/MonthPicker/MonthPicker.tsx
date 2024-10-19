@@ -240,7 +240,7 @@ export default function MonthPicker() {
                     <p className="flex text-xs font-semibold md:text-xl">
                       Total:
                     </p>
-                    {/*     <p>{balances.totals[employeeName]} Min.</p> */}
+
                     <p className="text-xs md:text-base">
                       {convertMinutesToHoursAndMinutes(
                         balances.totals[employeeName],
