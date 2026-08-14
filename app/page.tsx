@@ -3,6 +3,8 @@ import InputEmployee from '@/components/InputEmployee/InputEmployee'
 
 import { Employee as EmployeeType, getAllEmployees } from '@/app/api/actions'
 
+export const dynamic = 'force-dynamic'
+
 export default async function Home() {
   const employees: EmployeeType[] = await getAllEmployees()
 

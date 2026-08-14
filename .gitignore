@@ -21,6 +21,7 @@ timedb/
 
 # db
 /prisma/dev.db
+/generated/
 
 # misc
 .DS_Store

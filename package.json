@@ -2,17 +2,18 @@
   "name": "timeplus",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
-    "vercel-build": "prisma generate && next build",
-    "build": "next build",
+    "vercel-build": "prisma generate && next build --webpack",
+    "build": "next build --webpack",
     "start": "next start",
-    "lint": "next lint"
-    
+    "lint": "eslint .",
+    "test": "vitest run"
   },
   "dependencies": {
-    "@prisma/client": "^5.18.0",
-    "prisma": "^5.18.0",
+    "@prisma/adapter-pg": "^7.9.1",
+    "@prisma/client": "^7.9.1",
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-popover": "^1.1.1",
     "@radix-ui/react-select": "^2.1.1",
@@ -22,23 +23,31 @@
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "lucide-react": "^0.428.0",
-    "next": "14.2.5",
-    "react": "^18",
-    "react-day-picker": "^8.10.1",
-    "react-dom": "^18",
+    "next": "^16.3.1",
+    "pg": "^8.23.0",
+    "react": "^19.2.8",
+    "react-day-picker": "^9.13.0",
+    "react-dom": "^19.2.8",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@rocketseat/eslint-config": "^2.2.2",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "14.2.5",
+    "@eslint/js": "^9.39.1",
+    "@vitejs/plugin-react": "^5.1.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^22.19.11",
+    "@types/pg": "^8.15.5",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.1",
+    "eslint-config-next": "^16.3.1",
+    "jsdom": "^27.1.0",
     "postcss": "^8",
     "prettier-plugin-tailwindcss": "^0.6.6",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18",
+    "prisma": "^7.9.1"
   }
 }
